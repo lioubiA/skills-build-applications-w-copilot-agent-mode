@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom/vitest';
-import { cleanup, render, screen, waitFor } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import App from '../src/App.js';
@@ -53,6 +53,17 @@ describe('OctoFit presentation contract', () => {
   it('requests workout suggestions for a specific user', async () => {
     renderRoute('/workouts');
     await waitFor(() => expect(fetch).toHaveBeenCalledWith(expect.stringMatching(/\/api\/workouts\/suggestions\/mona(%40|@)example\.com$/)));
+  });
+
+  it('requests workout suggestions for the selected user', async () => {
+    renderRoute('/workouts');
+    const email = screen.getByRole('textbox', { name: /user email/i });
+    fireEvent.change(email, { target: { value: 'hubot@example.com' } });
+    fireEvent.click(screen.getByRole('button', { name: /get suggestions/i }));
+
+    await waitFor(() => expect(fetch).toHaveBeenCalledWith(
+      expect.stringMatching(/\/api\/workouts\/suggestions\/hubot(%40|@)example\.com$/),
+    ));
   });
 
   for (const capability of capabilities) {

@@ -7,6 +7,7 @@ type Props = {
   endpoint: string;
   dataKey: string;
   emptyLabel: string;
+  children?: React.ReactNode;
 };
 
 type Item = Record<string, unknown>;
@@ -25,7 +26,7 @@ function formatValue(value: unknown): string {
   return String(value);
 }
 
-export function CapabilityCard({ title, description, endpoint, dataKey, emptyLabel }: Props) {
+export function CapabilityCard({ title, description, endpoint, dataKey, emptyLabel, children }: Props) {
   const [state, setState] = useState<ViewState>({ status: 'loading' });
 
   useEffect(() => {
@@ -59,6 +60,7 @@ export function CapabilityCard({ title, description, endpoint, dataKey, emptyLab
       <div className="card-body">
         <h2 className="h4">{title}</h2>
         <p>{description}</p>
+        {children}
         {state.status === 'loading' && <p role="status">Loading {title.toLowerCase()}...</p>}
         {state.status === 'error' && (
           <p role="alert">Unable to load {title.toLowerCase()}. {state.message}</p>
