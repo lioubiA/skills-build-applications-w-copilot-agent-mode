@@ -55,16 +55,6 @@ describe('OctoFit presentation contract', () => {
     await waitFor(() => expect(fetch).toHaveBeenCalledWith(expect.stringMatching(/\/api\/workouts\/suggestions\/mona(%40|@)example\.com$/)));
   });
 
-  it('requests workout suggestions for the selected user', async () => {
-    renderRoute('/workouts');
-    const email = screen.getByRole('textbox', { name: /user email/i });
-    fireEvent.change(email, { target: { value: 'hubot@example.com' } });
-    fireEvent.click(screen.getByRole('button', { name: /get suggestions/i }));
-
-    await waitFor(() => expect(fetch).toHaveBeenCalledWith(
-      expect.stringMatching(/\/api\/workouts\/suggestions\/hubot(%40|@)example\.com$/),
-    ));
-  });
 
   for (const capability of capabilities) {
     describe(capability.route, () => {
